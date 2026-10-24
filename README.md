@@ -1,66 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Dashboard Laravel
 
-## About Laravel
+**Application web Laravel 11 avec inscription, connexion et tableau de bord**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Laravel](https://img.shields.io/badge/Laravel_11-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP_8.2-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+</div>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Présentation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Projet d'apprentissage du framework Laravel : une application MVC qui gère l'inscription d'utilisateurs, avec validation des formulaires côté serveur, persistance via Eloquent et des vues Blade stylées avec TailwindCSS.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Fonctionnalités
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Page de connexion et page d'inscription
+- Validation serveur des champs (nom, prénom, âge, email, confirmation du mot de passe)
+- Enregistrement des utilisateurs avec Eloquent (`Personne`)
+- Messages flash après inscription
+- Vues Blade réutilisables (`partials/_form`) : tableau de bord, liste, formulaire, édition
+- Migrations versionnées, dont l'ajout d'une colonne sur une table existante
 
-## Laravel Sponsors
+## Architecture
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```mermaid
+flowchart LR
+    browser((Navigateur)) --> routes[routes/web.php]
+    routes --> ctrl[UserController]
+    ctrl -->|validate| ctrl
+    ctrl --> model[Model Personne<br/>Eloquent]
+    model --> db[(MySQL)]
+    ctrl --> views[Vues Blade<br/>login · register · dashboard]
+```
 
-### Premium Partners
+| Route | Méthode | Action |
+|-------|---------|--------|
+| `/` | GET | Page de connexion |
+| `/register` | GET | Formulaire d'inscription |
+| `/register` | POST | Validation et création de l'utilisateur |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Installation
 
-## Contributing
+Prérequis : PHP 8.2+, Composer, Node.js, MySQL.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+git clone https://github.com/Russel-Kamgang/Dashboard-With-Laravel.git
+cd Dashboard-With-Laravel
 
-## Code of Conduct
+composer install
+npm install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+cp .env.example .env
+php artisan key:generate
+# Renseigner DB_DATABASE, DB_USERNAME et DB_PASSWORD dans .env
 
-## Security Vulnerabilities
+php artisan migrate
+npm run dev        # dans un terminal
+php artisan serve  # http://localhost:8000
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Structure
 
-## License
+```
+app/
+├── Http/Controllers/     # UserController, AdminController
+└── Models/               # Personne, Utilisateur, User
+database/migrations/      # Schéma de la base
+resources/views/          # Vues Blade
+routes/web.php            # Routes de l'application
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Feuille de route
+
+- [ ] Authentification complète (sessions, middleware `auth`)
+- [ ] CRUD des utilisateurs depuis le tableau de bord
+- [ ] Tests fonctionnels avec PHPUnit
+- [ ] Conteneurisation avec Docker Compose (PHP-FPM, Nginx, MySQL)
+
+## Licence
+
+Code sous licence [MIT](https://opensource.org/licenses/MIT), comme le framework Laravel.
